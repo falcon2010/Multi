@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -23,11 +24,16 @@ public class SectionsAdapter extends BaseAdapter {
     private Section parentSection;
     private Context context;
 
+    private final boolean hasParent;
+
 
     public SectionsAdapter(List<Section> subSection, Section parentSection, Context context) {
         this.context = context;
         this.subSection = subSection;
         this.parentSection = parentSection;
+
+        hasParent = this.parentSection != null;
+
 
     }
 
@@ -47,7 +53,7 @@ public class SectionsAdapter extends BaseAdapter {
 
 
     @Override
-    public Object getItem(int position) {
+    public Section getItem(int position) {
 
         final int type = getItemViewType(position);
 
@@ -71,7 +77,26 @@ public class SectionsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        final int viewType = getItemViewType(position);
+        final TextView text = new TextView(context);
+        switch (viewType) {
+            case NORMAL_SECTION:
+
+                if (subSection != null && subSection.size() > 0)
+                    if (hasParent)
+                        position = position - 1;
+
+                text.setText(subSection.get(position).getName());
+
+                break;
+            case PARENT_SECTION:
+                if (parentSection != null) text.setText(parentSection.getName());
+                break;
+
+
+        }
+
+        return text;
     }
 
     @Override

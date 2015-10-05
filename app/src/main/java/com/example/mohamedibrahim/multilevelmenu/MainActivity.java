@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import java.util.List;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Stack<SectionListFragment> mStack;
 
 
-    public ArrayMap<String, Object> getSharedData() {
-        return sharedData;
-    }
+    private List<Section> sectionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +40,22 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
 
         sharedData = new ArrayMap<>();
         mStack = new Stack<>();
+
+
+        sectionList = Section.generateSections();
+
+
+        if (sectionList != null && sectionList.size() > 0) {
+
+            SectionListFragment fragment = new SectionListFragment();
+            pushFragments(fragment, false, true, sectionList, null);
+
+
+        }
+
 
     }
 
@@ -64,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void pushFragments(SectionListFragment fragment, boolean animate, boolean add, ArrayMap<String, Object> args) {
+    public void pushFragments(SectionListFragment fragment, boolean animate, boolean add, List<Section> args, Section parent) {
         if (add) {
             mStack.add(fragment);
 
             final FragmentManager manager = getSupportFragmentManager();
             final FragmentTransaction fragmentTransaction = manager.beginTransaction();
 
-            fragment.setArguments(args);
+            fragment.setArguments(args, parent);
 
             if (animate)
                 fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);

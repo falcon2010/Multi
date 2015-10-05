@@ -21,6 +21,18 @@ public class Section {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public List<Section> getSubSections() {
+        return subSections;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 
     public static List<Section> generateSections() {
 
@@ -36,7 +48,7 @@ public class Section {
 
     private static List<Section> getSubSection(int c) {
         final List<Section> sections = new ArrayList<>();
-        for (int i = 0; i < c / 2; i++) {
+        for (int i = 0; i <  2; i++) {
             final Section section = new Section(i, "section " + i, null);
             sections.add(section);
         }
